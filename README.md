@@ -1,6 +1,6 @@
 #PuzzleApp
 
-Please do 'npm install' and 'npm install bootstrap' after downloading it.
+Please do 'npm install' and 'npm install bootstrap' & 'npm install --save popper.js' after downloading it.
 
 
 # PuzzleApp
