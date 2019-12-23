@@ -1,3 +1,8 @@
+#PuzzleApp
+
+Please do 'npm install' and 'npm install bootstrap' & 'npm install --save popper.js' after downloading it.
+
+
 # PuzzleApp
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.19.
