@@ -34,7 +34,7 @@ describe('AppComponent', () => {
     const app = fixture.debugElement.componentInstance;
     app.userInput=7;
     app.getMatrix('Right');
-    expect(app.mtrx).toEqual(3);
+    expect(app.matrixSize).toEqual(3);
     expect(app.direction).toEqual('Right');
 
     app.getMatrix('Left');

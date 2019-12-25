@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { CheckboxControlValueAccessor, FormGroup, FormBuilder } from '@angular/forms';
 import { ThrowStmt } from '@angular/compiler';
-//import { timingSafeEqual } from 'crypto';
-// import { runInThisContext } from 'vm';
+
 
 @Component({
   selector: 'app-root',
@@ -12,131 +11,119 @@ import { ThrowStmt } from '@angular/compiler';
 export class AppComponent {
   title = 'puzzleApp';
   userInput:number;
- 
-  
+  j=0;                   //variable for incresing the range of the matrix
+  matrixSize;
+  resultMatrix;         //Result Matrix;
+  m;                    //row
+  n;                    //column 
+  step=0;               //steps for move 
+  stepLimit=1;          //allowed steps for current rotation
+  turn=0;               //count of turns made
+  spiralDirection;      //Spiral Direction
+  direction;            //moving direction
 
-
-initialRange=0;
-j=0;
-fx=1;
-mtrx;
-ansMtrx;
-m; //row
-n; //column 
-
-direction; //moving direction
-step=0; //steps for move 
-stepLimit=1; //allowed steps for current rotation
-turn=0; //count of turns made
-spiralDirection; //Spiral Direction
-
-//calculate matrix size according to input
-sizeCalc(){ 
-  for(var i=0;i<this.userInput;i++){
-    if(this.userInput>this.initialRange && this.userInput<=this.initialRange+(8*(this.j+1))){
-      this.mtrx=this.fx+2;
-      return this.mtrx;
-    }
-    else{
-      this.initialRange=this.initialRange+(8*(this.j+1));
-      this.fx=this.fx+2;
-      this.j=this.j+1;
+  //calculate matrix size according to input
+  sizeCalc(){ 
+    let initialRange=0;
+    let initialSize=1;
+    for(var i=0;i<this.userInput;i++){
+      initialSize+=2; // Incresing size everytime when input is not in range
+      if(this.userInput>initialRange && this.userInput<=initialRange+(8*(this.j+1))){
+        return initialSize;
+      }
+      else{
+        initialRange=initialRange+(8*(this.j+1)); //Range increased
+        this.j=this.j+1;}
     }
   }
-}
 
-getMatrix(spiralDirection){
-  this.initialRange=0;
-  this.step=0;
-  this.stepLimit=1;
-  this.turn=0;
-  this.j=0;
-  this.fx=1;
-  this.mtrx=3;
-  this.ansMtrx;
-  this.m=0;
-  this.n=0;
-  this.mtrx=this.sizeCalc();
-  this.ansMtrx = new Array(this.mtrx);  
-
-  //creating an empty array of required size with the help of sizeCalc()
-  for (var i = 0; i < this.ansMtrx.length; i++) { 
-    this.ansMtrx[i] = new Array(this.mtrx); 
-  } 
-  this.m=(this.ansMtrx.length-1)/2
-  this.n=(this.ansMtrx.length-1)/2
-  this.mtrxCreater(spiralDirection);
-}
-
-
-mtrxCreater(spiralDirection){ 
-  this.spiralDirection=spiralDirection;
-  this.direction=this.spiralDirection;
-  for(var i=0;i<=this.userInput;i++){
-    //console.log(this.m,this.n,i);
-    this.ansMtrx[this.m][this.n]=i;
-    this.moveOneStep(this.direction)
-    this.ifTurnRequired();
-   
-  }
-}
-ifTurnRequired(){
-  if(this.step==this.stepLimit){ //it will turn
-    if(this.spiralDirection=='Left'){
-      this.direction=this.leftSpiralTurn(this.direction)
-   }
-    if(this.spiralDirection=='Right'){
-      this.direction=this.rightSpiralTurns(this.direction)
-    }
+  getMatrix(spiralDirection){
     this.step=0;
-    this.turn+=1;
-    if(this.turn==2){
-    this.stepLimit+=1;
-    this.turn=0;}
+    this.stepLimit=1;
+    this.turn=0;
+    this.j=0;
+    this.m=0;
+    this.n=0;
+    this.matrixSize=this.sizeCalc();
+    this.resultMatrix = new Array(this.matrixSize);  
+
+    //creating an empty array of required size with the help of sizeCalc()
+    for (var i = 0; i < this.resultMatrix.length; i++) { 
+      this.resultMatrix[i] = new Array(this.matrixSize); 
+    } 
+    this.m=(this.resultMatrix.length-1)/2
+    this.n=(this.resultMatrix.length-1)/2
+    this.matrixCreater(spiralDirection);
   }
 
-}
-moveOneStep(direction){
-  switch (direction) {
-    case 'Right':
-        this.n+=1;
-        break;
-    case "Left":
-        this.n-=1;
-        break;
-    case "Up":
-        this.m-=1
-        break;
-    case "Down":
-        this.m+=1;
-        break;
+  matrixCreater(spiralDirection){ 
+    this.spiralDirection=spiralDirection;
+    this.direction=this.spiralDirection;
+    for(var i=0;i<=this.userInput;i++){
+      //console.log(this.m,this.n,i); //Uncomment to Check if matrix is getting correct data
+      this.resultMatrix[this.m][this.n]=i;
+      this.moveOneStep(this.direction)
+      this.ifTurnRequired();
+    }
   }
-  this.step+=1;
-}
 
-leftSpiralTurn(direction){
-  switch (direction) {
-    case 'Right':
+  ifTurnRequired(){
+    if(this.step==this.stepLimit){ //it will turn
+      if(this.spiralDirection=='Left'){
+        this.direction=this.leftSpiralTurn(this.direction)
+    }
+      if(this.spiralDirection=='Right'){
+        this.direction=this.rightSpiralTurns(this.direction)
+      }
+      this.step=0;
+      this.turn+=1;
+      if(this.turn==2){
+      this.stepLimit+=1;
+      this.turn=0;}
+    }
+
+  }
+  moveOneStep(direction){
+    switch (direction) {
+      case 'Right':
+          this.n+=1;
+          break;
+      case "Left":
+          this.n-=1;
+          break;
+      case "Up":
+          this.m-=1
+          break;
+      case "Down":
+          this.m+=1;
+          break;
+    }
+    this.step+=1;
+  }
+
+  leftSpiralTurn(direction){
+    switch (direction) {
+      case 'Right':
+          return 'Up';
+      case "Left":
+        return 'Down';
+      case "Up":
+        return 'Left';
+      case "Down":
+        return 'Right';
+    }
+  }
+  rightSpiralTurns(direction){
+    switch (direction) {
+      case 'Right':
+        return 'Down';
+      case "Left":
         return 'Up';
-    case "Left":
-      return 'Down';
-    case "Up":
-      return 'Left';
-    case "Down":
-      return 'Right';
-  }
-}
-rightSpiralTurns(direction){
-  switch (direction) {
-    case 'Right':
-      return 'Down';
-    case "Left":
-      return 'Up';
-    case "Up":
-      return 'Right';
-    case "Down":
-      return 'Left';
-  }
+      case "Up":
+        return 'Right';
+      case "Down":
+        return 'Left';
+    }
 
-}
+  }
 }
