@@ -37,7 +37,6 @@ sizeCalc(){
       this.mtrx=this.fx+2;
       return this.mtrx;
     }
-
     else{
       this.initialRange=this.initialRange+(8*(this.j+1));
       this.fx=this.fx+2;
@@ -60,12 +59,13 @@ getMatrix(spiralDirection){
   this.mtrx=this.sizeCalc();
   this.ansMtrx = new Array(this.mtrx);  
 
+  //creating an empty array of required size with the help of sizeCalc()
   for (var i = 0; i < this.ansMtrx.length; i++) { 
     this.ansMtrx[i] = new Array(this.mtrx); 
   } 
   this.m=(this.ansMtrx.length-1)/2
   this.n=(this.ansMtrx.length-1)/2
-  this.mtrxCreater(spiralDirection)
+  this.mtrxCreater(spiralDirection);
 }
 
 
@@ -76,23 +76,26 @@ mtrxCreater(spiralDirection){
     //console.log(this.m,this.n,i);
     this.ansMtrx[this.m][this.n]=i;
     this.moveOneStep(this.direction)
-    this.step+=1;
-    if(this.step==this.stepLimit){ //it will turn
-      if(this.spiralDirection=='Left'){
-        this.direction=this.leftSpiralTurn(this.direction)
-     }
-      if(this.spiralDirection=='Right'){
-        this.direction=this.rightSpiralTurns(this.direction)
-      }
-      this.step=0;
-      this.turn+=1;
-      if(this.turn==2){
-      this.stepLimit+=1;
-      this.turn=0;}
-    }
+    this.ifTurnRequired();
+   
   }
 }
+ifTurnRequired(){
+  if(this.step==this.stepLimit){ //it will turn
+    if(this.spiralDirection=='Left'){
+      this.direction=this.leftSpiralTurn(this.direction)
+   }
+    if(this.spiralDirection=='Right'){
+      this.direction=this.rightSpiralTurns(this.direction)
+    }
+    this.step=0;
+    this.turn+=1;
+    if(this.turn==2){
+    this.stepLimit+=1;
+    this.turn=0;}
+  }
 
+}
 moveOneStep(direction){
   switch (direction) {
     case 'Right':
@@ -108,7 +111,7 @@ moveOneStep(direction){
         this.m+=1;
         break;
   }
-
+  this.step+=1;
 }
 
 leftSpiralTurn(direction){

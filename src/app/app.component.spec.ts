@@ -10,7 +10,7 @@ import { applySourceSpanToExpressionIfNeeded } from '@angular/compiler/src/outpu
 describe('AppComponent', () => {
   let de:DebugElement;
   let el:HTMLElement;
-
+  let spyObject;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -29,16 +29,19 @@ describe('AppComponent', () => {
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
   });
-  it('Should hide message', ()=> {
+  it('Direction and Matrix size on getMatrix()', ()=> {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.getMatrix()).toBeFalsy();
+    app.userInput=7;
+    app.getMatrix('Right');
+    expect(app.mtrx).toEqual(3);
+    expect(app.direction).toEqual('Right');
+
+    app.getMatrix('Left');
+    expect(app.direction).toEqual('Left');
+    
   });
-  it('Should hide message', ()=> {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.sizeCalc()).toBeFalsy();
-  });
+  
   it('title should say puzzleApp',() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
@@ -52,30 +55,28 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('h3').textContent).toContain('Spiral')
   })
   
-  it('should should',()=>{
+  
+  it('Size calculator function working', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.sizeCalc()).toBe(undefined);
-  })
-  it('loaderIs should be falsy', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    app.userInput = 1
+    app.userInput=11;
     app.sizeCalc();
-    expect(app.mtrx).toBeTruthy();
-    app.userInput=11
-    app.sizeCalc();
-    expect(app.j).toBeTruthy();
+    expect(app.j).toEqual(1);
 });
-it('loaderIs should be falsy', () => {
+
+it('If turn required', () => {
   const fixture = TestBed.createComponent(AppComponent);
   const app = fixture.debugElement.componentInstance;
-  //app.userInput=23;
-  app.direction = 'Left';
-  app.mtrxCreater();
-  expect(app.n).toBeFalsy();
+  app.step=1;
+  app.stepLimit=1;
+  app.ifTurnRequired();
+  expect(app.step).toEqual(0);
+
+
+  
 });
-it('tests sbr', () => {
+
+it('tests Switch cases for moves and turns', () => {
   const fixture = TestBed.createComponent(AppComponent);
   const app = fixture.debugElement.componentInstance;
   
@@ -90,21 +91,13 @@ it('tests sbr', () => {
   expect( app.rightSpiralTurns('Down')).toEqual('Left');
 
   app.moveOneStep('Right')
-  expect(app.n).toBeFalsy();
-  app.moveOneStep('Left')
-  expect(app.n).toBeFalsy();
-  app.moveOneStep('Up')
-  expect(app.n).toBeFalsy();
-  app.moveOneStep('Down')
-  expect(app.n).toBeFalsy();
-
-
-  // app.step=0;
-  // app.stepLimit=1;
-  // app.userInput=11;
-  // app.m=0;
-  // app.n=0;
-  // app.mtrxCreater('Right');
+  expect(app.n).toBeDefined();
+  app.moveOneStep('Left');
+  expect(app.n).toBeDefined();
+  app.moveOneStep('Up');
+  expect(app.m).toBeDefined();
+  app.moveOneStep('Down');
+  expect(app.m).toBeDefined();
 });
 
  });
